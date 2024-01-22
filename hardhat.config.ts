@@ -8,9 +8,6 @@ dotenv.config()
 
 if (!process.env.MNEMONIC) throw ('mnemonic undefined')
 
-if (!process.env.MNEMONIC) throw ('undefined mnemonic')
-
-
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
