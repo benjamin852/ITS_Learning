@@ -37,18 +37,17 @@ contract MyNativeInterchainToken is
         _burn(account, value);
     }
 
-    function registerAsInterchainToken(bytes32 _salt) external payable {
-        bytes memory params = tokenManager.params("", address(this));
+    function deployTokenManager(bytes32 _salt) external payable {
+        // bytes memory params = tokenManager.params(msg.sender.toBytes(), address(this)); //BREAKS!! -> why?
         bytes32 interchainId = its.deployTokenManager{value: msg.value}(
             _salt,
             "",
             ITokenManagerType.TokenManagerType.MINT_BURN,
-            // abi.encode(0x0, address(this)),
-            params,
+            abi.encode(0x0, address(this)),
             msg.value
         );
         theInterchainTokenId = interchainId;
-        _grantRole(MINTER_ROLE, address(its)); //mint access on fantom
+        _grantRole(MINTER_ROLE, address(its));
     }
 
     /**
@@ -73,28 +72,6 @@ contract MyNativeInterchainToken is
 
     function grantRole(address _newMinter) public {
         _grantRole(MINTER_ROLE, _newMinter);
-    }
-
-    function deployLocalInterchainToken(bytes32 _salt) external {
-        itsFactory.deployInterchainToken(
-            _salt,
-            "ben ITS",
-            "bITS",
-            18,
-            1 ether,
-            0x312dba807EAE77f01EF3dd21E885052f8F617c5B
-        );
-    }
-
-    // deploy token with mint/burn manager on polygon
-    function deployOnRemoteChain(bytes32 _salt) external payable {
-        itsFactory.deployRemoteInterchainToken{value: msg.value}(
-            "Fantom",
-            _salt,
-            msg.sender,
-            "Polygon",
-            0.1 ether
-        );
     }
 
     // Implementations for abstract functions in InterchainTokenStandard
