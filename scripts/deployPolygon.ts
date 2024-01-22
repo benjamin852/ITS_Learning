@@ -3,9 +3,6 @@ import chains from '../chains.json'
 
 async function main() {
 
-    const randomBytes = ethers.randomBytes(32);
-    const salt = ethers.hexlify(randomBytes);
-
     const myInterhchainToken = await ethers.deployContract('MyNativeInterchainToken', [
         chains[0].itsFactory,
         chains[0].its,
